@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block title %}S3 Bucket List{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <h3>Bucket List</h3>
+        <hr>
+
+        <div>
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createModal">Create Bucket</button>
+            <p>Create a new bucket</p>
+        </div>
+        <hr>
+
+        <table class="table table-striped">
+            <tr>
+              <th>Bucket Name</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+
+        {% for bucket in buckets %}
+            <tr>
+                <td>{{ bucket['Name'] }}</td>
+                <td>{{ bucket['CreationDate'] | datetimeformat }}</td>
+                <td class="td-buttons">
+                <form class="select-bucket" action="{{ url_for('index') }}" method="post">
+                    <input type="hidden" name="bucket" value="{{ bucket['Name'] }}">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-archive"></i>
+                        Select
+                    </button>
+                </form>
+                <form class="delete-bucket" action="{{ url_for('delete_bucket') }}" method="post">
+                    <input type="hidden" name="bucket" value="{{ bucket['Name'] }}">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash-alt"></i>
+                    </button>
+                </form>
+              </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form class="form-horizontal" action="{{ url_for('create') }}" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Create New Bucket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label">Bucket Name:</label>
+                            <input type="text" class="form-control" name="bucketname" id="bucketname"/>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+            </form>
+        </div>
+      </div>
+{% endblock %}
